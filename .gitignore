@@ -1,0 +1,11 @@
+node_modules
+dist
+.env
+.env.local
+*.local
+.venv
+.idea
+main.py
+__pycache__
+coverage
+*.log
