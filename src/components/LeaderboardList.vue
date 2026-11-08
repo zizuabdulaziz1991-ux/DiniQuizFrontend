@@ -1,19 +1,21 @@
 <script setup lang="ts">
+import { useI18n } from 'vue-i18n'
 import type { LeaderboardEntry } from '@/types/api'
 
 defineProps<{ entries: LeaderboardEntry[]; highlightRank?: number | null }>()
 const medals = ['🥇', '🥈', '🥉']
+const { t } = useI18n()
 
 function detail(e: LeaderboardEntry): string {
   const games = e.games_played ?? 1
   const best = e.best_score ?? e.score
-  return `${games} oyun · en iyi ${best}`
+  return t('leaderboard.detail', { games, best })
 }
 </script>
 
 <template>
   <p v-if="!entries.length" class="card p-6 text-center font-bold text-muted">
-    Henüz kimse yok. İlk sen ol!
+    {{ t('leaderboard.empty') }}
   </p>
   <ol v-else class="space-y-2">
     <li
@@ -29,7 +31,7 @@ function detail(e: LeaderboardEntry): string {
       </span>
       <span class="text-right">
         <span class="block font-black leading-none text-primary">{{ e.total_score ?? e.score }}</span>
-        <span class="text-[11px] font-bold text-muted">toplam puan</span>
+        <span class="text-[11px] font-bold text-muted">{{ t('leaderboard.totalPoints') }}</span>
       </span>
     </li>
   </ol>

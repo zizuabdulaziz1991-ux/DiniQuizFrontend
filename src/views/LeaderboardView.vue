@@ -1,12 +1,14 @@
 <script setup lang="ts">
 import { computed, onMounted, ref, watch } from 'vue'
 import { RouterLink, useRoute, useRouter } from 'vue-router'
+import { useI18n } from 'vue-i18n'
 import { getCategories, getLeaderboard } from '@/api/quiz'
 import type { Category, LeaderboardEntry } from '@/types/api'
 import LeaderboardList from '@/components/LeaderboardList.vue'
 
 const route = useRoute()
 const router = useRouter()
+const { t, locale } = useI18n()
 const categories = ref<Category[]>([])
 const entries = ref<LeaderboardEntry[]>([])
 const loading = ref(true)
@@ -21,7 +23,7 @@ async function load() {
   try {
     entries.value = (await getLeaderboard(active.value || undefined)).entries
   } catch {
-    error.value = 'Skor tablosu yüklenemedi.'
+    error.value = t('leaderboard.loadError')
   } finally {
     loading.value = false
   }
@@ -32,10 +34,17 @@ function select(slug: string) {
 }
 
 watch(active, load)
+watch(locale, async () => {
+  try {
+    categories.value = await getCategories(locale.value)
+  } catch {
+    /* mevcut adlar kalsın */
+  }
+})
 onMounted(async () => {
   load()
   try {
-    categories.value = await getCategories()
+    categories.value = await getCategories(locale.value)
   } catch {
     /* sekmeler olmadan da çalışır */
   }
@@ -44,9 +53,9 @@ onMounted(async () => {
 
 <template>
   <section>
-    <RouterLink to="/" class="text-sm font-bold text-muted">← Ana ekran</RouterLink>
-    <h1 class="mb-1 mt-2 text-3xl font-black text-primary">Skor Tablosu</h1>
-    <p class="mb-4 text-sm font-semibold text-muted">Aynı isimle oynanan oyunların puanları toplanır.</p>
+    <RouterLink to="/" class="text-sm font-bold text-muted">{{ t('leaderboard.back') }}</RouterLink>
+    <h1 class="mb-1 mt-2 text-3xl font-black text-primary">{{ t('leaderboard.title') }}</h1>
+    <p class="mb-4 text-sm font-semibold text-muted">{{ t('leaderboard.note') }}</p>
 
     <div class="-mx-4 mb-4 flex gap-2 overflow-x-auto px-4 pb-2" role="tablist">
       <button
@@ -57,7 +66,7 @@ onMounted(async () => {
         :class="!active ? 'bg-primary text-white' : 'bg-surface text-muted'"
         @click="select('')"
       >
-        Genel
+        {{ t('leaderboard.general') }}
       </button>
       <button
         v-for="c in categories"
@@ -74,12 +83,12 @@ onMounted(async () => {
       </button>
     </div>
 
-    <p v-if="loading" class="text-center font-bold text-muted">Yükleniyor…</p>
+    <p v-if="loading" class="text-center font-bold text-muted">{{ t('common.loading') }}</p>
     <p v-else-if="error" class="text-center font-bold text-danger" role="alert">{{ error }}</p>
     <LeaderboardList v-else :entries="entries" :highlight-rank="myRank" />
 
     <RouterLink to="/kategoriler" class="mt-6 block rounded-btn bg-primary py-4 text-center text-lg font-extrabold text-white">
-      Tekrar Oyna
+      {{ t('leaderboard.playAgain') }}
     </RouterLink>
   </section>
 </template>

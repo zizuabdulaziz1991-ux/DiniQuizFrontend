@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
+import { useI18n } from 'vue-i18n'
 import { useQuizStore } from '@/stores/quiz'
 import { getResult } from '@/api/quiz'
 import { apiStatus, loadSession } from '@/api/client'
@@ -9,6 +10,7 @@ import AppButton from '@/components/AppButton.vue'
 
 const props = defineProps<{ sessionId: string }>()
 const router = useRouter()
+const { t } = useI18n()
 const store = useQuizStore()
 const result = ref<QuizResult | null>(null)
 const error = ref('')
@@ -27,7 +29,7 @@ async function load() {
   } catch (e) {
     const st = apiStatus(e)
     if (st === 403 || st === 404) router.replace('/kategoriler')
-    else error.value = 'Sonuç yüklenemedi.'
+    else error.value = t('result.loadError')
   }
 }
 
@@ -59,29 +61,29 @@ onMounted(() => {
     </template>
 
     <p v-if="error" class="font-bold text-danger" role="alert">{{ error }}</p>
-    <p v-else-if="!result" class="font-bold text-muted">Yükleniyor…</p>
+    <p v-else-if="!result" class="font-bold text-muted">{{ t('common.loading') }}</p>
 
     <template v-else>
-      <h1 class="text-2xl font-black text-primary">Quiz bitti!</h1>
+      <h1 class="text-2xl font-black text-primary">{{ t('result.title') }}</h1>
       <div class="card w-full p-6">
-        <p class="text-sm font-bold text-muted">Toplam puan</p>
+        <p class="text-sm font-bold text-muted">{{ t('result.totalScore') }}</p>
         <p class="text-6xl font-black text-accent">{{ result.score }}</p>
         <p class="text-sm font-semibold text-muted">/ {{ result.max_score }}</p>
         <p v-if="top10" class="mt-2 font-extrabold text-success">
-          Şu an {{ result.rank_preview }}. sıradasın! 🎉
+          {{ t('result.rankTop', { rank: result.rank_preview }) }}
         </p>
-        <p v-else class="mt-2 font-semibold text-muted">Tahmini sıran: {{ result.rank_preview }}</p>
+        <p v-else class="mt-2 font-semibold text-muted">{{ t('result.rankPreview', { rank: result.rank_preview }) }}</p>
       </div>
 
       <div class="grid w-full grid-cols-3 gap-3">
-        <div class="card p-3"><p class="text-2xl font-black text-success">{{ result.correct_count }}</p><p class="text-xs font-bold text-muted">Doğru</p></div>
-        <div class="card p-3"><p class="text-2xl font-black text-danger">{{ result.wrong_count }}</p><p class="text-xs font-bold text-muted">Yanlış</p></div>
-        <div class="card p-3"><p class="text-2xl font-black text-muted">{{ result.empty_count }}</p><p class="text-xs font-bold text-muted">Boş</p></div>
+        <div class="card p-3"><p class="text-2xl font-black text-success">{{ result.correct_count }}</p><p class="text-xs font-bold text-muted">{{ t('result.correct') }}</p></div>
+        <div class="card p-3"><p class="text-2xl font-black text-danger">{{ result.wrong_count }}</p><p class="text-xs font-bold text-muted">{{ t('result.wrong') }}</p></div>
+        <div class="card p-3"><p class="text-2xl font-black text-muted">{{ result.empty_count }}</p><p class="text-xs font-bold text-muted">{{ t('result.empty') }}</p></div>
       </div>
 
       <div class="w-full space-y-3">
-        <AppButton @click="router.push(`/isim/${sessionId}`)">Skor tablosuna gir</AppButton>
-        <AppButton variant="ghost" @click="again('/kategoriler')">Tekrar oyna</AppButton>
+        <AppButton @click="router.push(`/isim/${sessionId}`)">{{ t('result.toLeaderboard') }}</AppButton>
+        <AppButton variant="ghost" @click="again('/kategoriler')">{{ t('result.playAgain') }}</AppButton>
       </div>
     </template>
   </section>

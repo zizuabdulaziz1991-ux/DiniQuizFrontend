@@ -8,10 +8,22 @@ export interface Category {
   question_count: number
 }
 
+export interface LanguageInfo {
+  code: string
+  name: string
+}
+
+export interface LanguagesResponse {
+  default: string
+  detected: string
+  languages: LanguageInfo[]
+}
+
 export interface SessionStart {
   session_id: string
   token: string
   category: string
+  language?: string
   total_questions: number
   time_limit_seconds: number
 }

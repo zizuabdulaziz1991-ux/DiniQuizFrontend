@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { RouterLink } from 'vue-router'
+import { useI18n } from 'vue-i18n'
 import AppButton from '@/components/AppButton.vue'
+const { t } = useI18n()
 </script>
 
 <template>
@@ -10,14 +12,14 @@ import AppButton from '@/components/AppButton.vue'
     </div>
     <h1 class="text-5xl font-black text-primary">DiniQuiz</h1>
     <p class="max-w-xs text-lg font-semibold text-muted">
-      Hızlı, eğlenceli dini bilgi yarışması. Kayıt yok, hemen oyna!
+      {{ t('home.tagline') }}
     </p>
     <div class="w-full space-y-3 pt-4">
       <RouterLink to="/kategoriler" class="block">
-        <AppButton>Başla</AppButton>
+        <AppButton>{{ t('home.start') }}</AppButton>
       </RouterLink>
       <RouterLink to="/skor-tablosu" class="block">
-        <AppButton variant="ghost">Skor Tablosu</AppButton>
+        <AppButton variant="ghost">{{ t('home.leaderboard') }}</AppButton>
       </RouterLink>
     </div>
   </section>

@@ -1,4 +1,5 @@
 import axios from 'axios'
+import { currentLocale } from '@/i18n'
 
 export const http = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:8000/api/v1',
@@ -39,6 +40,7 @@ export function clearSession(): void {
 }
 
 http.interceptors.request.use((config) => {
+  config.headers.set('Accept-Language', currentLocale())
   const s = loadSession()
   if (s && config.url?.includes('/sessions/' + s.sessionId)) {
     config.headers.set('X-Session-Token', s.token)

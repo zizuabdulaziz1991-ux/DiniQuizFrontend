@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia'
 import * as api from '@/api/quiz'
+import { currentLocale } from '@/i18n'
 import { clearSession, loadSession, saveSession } from '@/api/client'
 import type { AnswerResult, CurrentQuestion, QuizResult } from '@/types/api'
 
@@ -25,7 +26,7 @@ export const useQuizStore = defineStore('quiz', {
       return !!this.sessionId
     },
     async start(slug: string) {
-      const data = await api.startSession(slug)
+      const data = await api.startSession(slug, currentLocale())
       saveSession({ sessionId: data.session_id, token: data.token })
       this.sessionId = data.session_id
       this.totalQuestions = data.total_questions

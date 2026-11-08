@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
+import { useI18n } from 'vue-i18n'
 import { saveName } from '@/api/quiz'
 import { apiStatus } from '@/api/client'
 import { useQuizStore } from '@/stores/quiz'
@@ -9,6 +10,7 @@ import AppButton from '@/components/AppButton.vue'
 
 const props = defineProps<{ sessionId: string }>()
 const router = useRouter()
+const { t } = useI18n()
 const store = useQuizStore()
 const name = ref('')
 const error = ref('')
@@ -18,7 +20,7 @@ async function submit() {
   if (saving.value) return
   const v = validateName(name.value)
   if (!v.ok) {
-    error.value = v.error ?? ''
+    error.value = v.error ? t(`name.${v.error}`) : ''
     return
   }
   saving.value = true
@@ -33,9 +35,9 @@ async function submit() {
     })
   } catch (e) {
     const st = apiStatus(e)
-    if (st === 400) error.value = 'Bu isim kabul edilmedi. Başka bir isim dene.'
-    else if (st === 409) error.value = 'Bu quiz için isim zaten kaydedilmiş.'
-    else error.value = 'İsim kaydedilemedi. Tekrar dene.'
+    if (st === 400) error.value = t('name.rejected')
+    else if (st === 409) error.value = t('name.alreadySaved')
+    else error.value = t('name.saveError')
   } finally {
     saving.value = false
   }
@@ -49,9 +51,9 @@ function skip() {
 
 <template>
   <section class="flex flex-1 flex-col justify-center gap-5">
-    <h1 class="text-center text-3xl font-black text-primary">Adın ne?</h1>
+    <h1 class="text-center text-3xl font-black text-primary">{{ t('name.title') }}</h1>
     <form class="card space-y-4 p-5" novalidate @submit.prevent="submit">
-      <label for="player-name" class="block text-sm font-bold text-muted">İsim (2–20 karakter)</label>
+      <label for="player-name" class="block text-sm font-bold text-muted">{{ t('name.label') }}</label>
       <input
         id="player-name"
         v-model="name"
@@ -63,8 +65,8 @@ function skip() {
         aria-describedby="name-error"
       />
       <p id="name-error" class="min-h-[1.25rem] text-sm font-bold text-danger" role="alert">{{ error }}</p>
-      <AppButton type="submit" :disabled="saving">{{ saving ? 'Kaydediliyor…' : 'Kaydet' }}</AppButton>
-      <AppButton variant="ghost" :disabled="saving" @click="skip">Geç</AppButton>
+      <AppButton type="submit" :disabled="saving">{{ saving ? t('name.saving') : t('name.save') }}</AppButton>
+      <AppButton variant="ghost" :disabled="saving" @click="skip">{{ t('name.skip') }}</AppButton>
     </form>
   </section>
 </template>

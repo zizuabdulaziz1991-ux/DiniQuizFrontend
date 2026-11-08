@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
 import { onBeforeRouteLeave, useRouter } from 'vue-router'
+import { useI18n } from 'vue-i18n'
 import { useQuizStore } from '@/stores/quiz'
 import { apiStatus } from '@/api/client'
 import { useCountdown } from '@/composables/useCountdown'
@@ -12,6 +13,7 @@ import AppButton from '@/components/AppButton.vue'
 
 const props = defineProps<{ sessionId: string }>()
 const router = useRouter()
+const { t } = useI18n()
 const store = useQuizStore()
 
 const feedbackDelay = Number(import.meta.env.VITE_FEEDBACK_DELAY_MS ?? 1500)
@@ -57,7 +59,7 @@ async function loadQuestion() {
       store.reset()
       return leaveTo('/kategoriler')
     }
-    error.value = 'Soru yüklenemedi. Bağlantını kontrol et.'
+    error.value = t('quiz.loadError')
   } finally {
     loading.value = false
   }
@@ -81,13 +83,13 @@ async function submit(choiceId: number | null) {
       store.reset()
       return leaveTo('/kategoriler')
     }
-    error.value = 'Cevap gönderilemedi. Tekrar deneyin.'
+    error.value = t('quiz.answerError')
   }
 }
 
 onBeforeRouteLeave(() => {
   if (allowLeave.value) return true
-  return window.confirm('Quizden çıkmak istiyor musun? İlerlemen kaybolabilir.')
+  return window.confirm(t('quiz.leaveConfirm'))
 })
 
 function warnUnload(e: BeforeUnloadEvent) {
@@ -112,20 +114,20 @@ onBeforeUnmount(() => {
 
 <template>
   <section class="flex flex-1 flex-col gap-4">
-    <p v-if="loading && !current" class="m-auto font-bold text-muted">Yükleniyor…</p>
+    <p v-if="loading && !current" class="m-auto font-bold text-muted">{{ t('common.loading') }}</p>
 
     <div v-if="error" class="card space-y-3 p-4 text-center">
       <p class="font-bold text-danger" role="alert">{{ error }}</p>
-      <AppButton @click="current && !answered ? submit(selectedId) : loadQuestion()">Tekrar dene</AppButton>
+      <AppButton @click="current && !answered ? submit(selectedId) : loadQuestion()">{{ t('common.retry') }}</AppButton>
     </div>
 
     <template v-if="current">
       <header class="flex items-center gap-4">
         <div class="flex-1">
-          <ProgressBar :index="current.index" :total="current.total" />
+          <ProgressBar :index="current.index + 1" :total="current.total" />
         </div>
         <div class="relative text-right">
-          <p class="text-xs font-bold text-muted">Puan</p>
+          <p class="text-xs font-bold text-muted">{{ t('quiz.score') }}</p>
           <p class="text-2xl font-black text-accent">{{ store.score }}</p>
           <ScorePop v-if="store.lastAnswer" :points="store.lastAnswer.points" />
         </div>
@@ -148,6 +150,7 @@ onBeforeUnmount(() => {
           :key="c.id"
           :label="labels[i]"
           :text="c.text"
+          :aria-label="t('quiz.choiceAria', { label: labels[i], text: c.text })"
           :state="choiceState(c.id)"
           :disabled="store.submitting || answered || selectedId !== null || remainingMs <= 0"
           @pick="submit(c.id)"
@@ -156,7 +159,7 @@ onBeforeUnmount(() => {
 
       <p v-if="store.lastAnswer" class="card p-4 text-sm font-semibold" role="status">
         <span class="font-black" :class="store.lastAnswer.is_correct ? 'text-success' : 'text-danger'">
-          {{ store.lastAnswer.is_correct ? 'Doğru!' : selectedId === null ? 'Süre doldu!' : 'Yanlış!' }}
+          {{ store.lastAnswer.is_correct ? t('quiz.correct') : selectedId === null ? t('quiz.timeout') : t('quiz.wrong') }}
         </span>
         <span v-if="store.lastAnswer.explanation"> {{ store.lastAnswer.explanation }}</span>
       </p>

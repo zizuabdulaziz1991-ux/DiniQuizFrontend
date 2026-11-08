@@ -4,15 +4,22 @@ import type {
   Category,
   CurrentQuestion,
   Leaderboard,
+  LanguagesResponse,
   NameResult,
   QuizResult,
   SessionStart,
 } from '@/types/api'
 
-export const getCategories = () => http.get<Category[]>('/categories/').then((r) => r.data)
+export const getLanguages = () =>
+  http.get<LanguagesResponse>('/languages/').then((r) => r.data)
 
-export const startSession = (category: string) =>
-  http.post<SessionStart>('/sessions/', { category, platform: 'web' }).then((r) => r.data)
+export const getCategories = (lang?: string) =>
+  http.get<Category[]>('/categories/', { params: { lang } }).then((r) => r.data)
+
+export const startSession = (category: string, language: string) =>
+  http
+    .post<SessionStart>('/sessions/', { category, platform: 'web', language })
+    .then((r) => r.data)
 
 export const getCurrent = (id: string) =>
   http.get<CurrentQuestion>(`/sessions/${id}/current/`).then((r) => r.data)

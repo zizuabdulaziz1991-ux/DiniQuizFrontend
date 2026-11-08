@@ -1,7 +1,9 @@
 <script setup lang="ts">
 import { computed } from 'vue'
+import { useI18n } from 'vue-i18n'
 
 const props = defineProps<{ remainingMs: number; totalSeconds: number }>()
+const { t } = useI18n()
 
 const R = 42
 const C = 2 * Math.PI * R
@@ -16,7 +18,7 @@ const color = computed(() => (urgent.value ? '#FF5A6E' : seconds.value > 10 ? '#
     class="relative h-24 w-24"
     :class="{ shake: urgent && remainingMs > 0 }"
     role="timer"
-    :aria-label="`Kalan süre ${seconds} saniye`"
+    :aria-label="t('quiz.timerAria', { seconds })"
   >
     <svg viewBox="0 0 100 100" class="h-full w-full -rotate-90">
       <circle cx="50" cy="50" :r="R" fill="none" stroke="#E7E3FA" stroke-width="9" />

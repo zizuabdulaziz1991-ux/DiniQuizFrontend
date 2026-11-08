@@ -3,7 +3,13 @@ import { computed } from 'vue'
 
 export type ChoiceState = 'normal' | 'selected' | 'correct' | 'wrong'
 
-const props = defineProps<{ label: string; text: string; state?: ChoiceState; disabled?: boolean }>()
+const props = defineProps<{
+  label: string
+  text: string
+  state?: ChoiceState
+  disabled?: boolean
+  ariaLabel?: string
+}>()
 defineEmits<{ pick: [] }>()
 
 const styles: Record<ChoiceState, string> = {
@@ -20,7 +26,7 @@ const mark = computed(() => (props.state === 'correct' ? '✓' : props.state ===
   <button
     type="button"
     :disabled="disabled"
-    :aria-label="`Şık ${label}: ${text}`"
+    :aria-label="ariaLabel ?? `${label}: ${text}`"
     class="flex min-h-[56px] w-full items-center gap-3 rounded-btn border-2 px-4 py-2 text-left text-[17px] font-bold transition focus:outline-none focus-visible:ring-4 focus-visible:ring-primary/40"
     :class="[cls, disabled && state === 'normal' ? 'opacity-70' : '']"
     @click="$emit('pick')"

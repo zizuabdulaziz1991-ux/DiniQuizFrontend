@@ -1,8 +1,10 @@
 <script setup lang="ts">
+import { useI18n } from 'vue-i18n'
 import type { Category } from '@/types/api'
 
 defineProps<{ category: Category; disabled?: boolean }>()
 defineEmits<{ select: [slug: string] }>()
+const { t } = useI18n()
 </script>
 
 <template>
@@ -10,7 +12,7 @@ defineEmits<{ select: [slug: string] }>()
     type="button"
     :disabled="disabled"
     class="card flex w-full items-center gap-4 p-4 text-left transition hover:-translate-y-0.5 focus:outline-none focus-visible:ring-4 focus-visible:ring-primary/40 disabled:opacity-60"
-    :aria-label="`${category.name}, ${category.question_count} soru`"
+    :aria-label="`${category.name}, ${t('categories.questionCount', { n: category.question_count })}`"
     @click="$emit('select', category.slug)"
   >
     <span
@@ -25,7 +27,7 @@ defineEmits<{ select: [slug: string] }>()
       <span class="block text-sm text-muted">{{ category.description }}</span>
     </span>
     <span class="shrink-0 rounded-full bg-bg px-3 py-1 text-sm font-bold text-muted">
-      {{ category.question_count }} soru
+      {{ t('categories.questionCount', { n: category.question_count }) }}
     </span>
   </button>
 </template>

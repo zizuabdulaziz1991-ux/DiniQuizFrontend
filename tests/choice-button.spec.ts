@@ -24,7 +24,7 @@ describe('ChoiceButton', () => {
   })
   it('aria-label içerir ve tıklanınca pick yayar', async () => {
     const w = mk()
-    expect(w.attributes('aria-label')).toBe('Şık A: Hira')
+    expect(w.attributes('aria-label')).toBe('A: Hira')
     await w.trigger('click')
     expect(w.emitted('pick')).toHaveLength(1)
   })
