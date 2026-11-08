@@ -7,6 +7,7 @@ import { getResult } from '@/api/quiz'
 import { apiStatus, loadSession } from '@/api/client'
 import type { QuizResult } from '@/types/api'
 import AppButton from '@/components/AppButton.vue'
+import ShareButtons from '@/components/ShareButtons.vue'
 
 const props = defineProps<{ sessionId: string }>()
 const router = useRouter()
@@ -80,6 +81,8 @@ onMounted(() => {
         <div class="card p-3"><p class="text-2xl font-black text-danger">{{ result.wrong_count }}</p><p class="text-xs font-bold text-muted">{{ t('result.wrong') }}</p></div>
         <div class="card p-3"><p class="text-2xl font-black text-muted">{{ result.empty_count }}</p><p class="text-xs font-bold text-muted">{{ t('result.empty') }}</p></div>
       </div>
+
+      <ShareButtons :score="result.score" />
 
       <div class="w-full space-y-3">
         <AppButton @click="router.push(`/isim/${sessionId}`)">{{ t('result.toLeaderboard') }}</AppButton>

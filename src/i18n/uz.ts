@@ -2,7 +2,7 @@ import type tr from './tr'
 
 // O‘zbekcha (lotin yozuvi). Kalitlar tr.ts bilan bir xil bo‘lishi shart (tip tekshiruvi buni ta’minlaydi).
 const uz: typeof tr = {
-  app: { language: 'Til' },
+  app: { language: 'Til', waking: 'Server uyg‘onmoqda, bir necha soniya kuting…' },
   common: { loading: 'Yuklanmoqda…', retry: 'Qayta urinish' },
   home: {
     tagline: 'Tez va qiziqarli diniy bilimlar musobaqasi. Ro‘yxatdan o‘tish shart emas, hoziroq o‘ynang!',
@@ -51,6 +51,13 @@ const uz: typeof tr = {
     rejected: 'Bu ism qabul qilinmadi. Boshqa ism sinab ko‘ring.',
     alreadySaved: 'Bu viktorina uchun ism allaqachon saqlangan.',
     saveError: 'Ismni saqlab bo‘lmadi. Qayta urinib ko‘ring.',
+  },
+  share: {
+    title: 'Do‘stlaringiz bilan ulashing',
+    native: 'Ulashish',
+    copy: 'Havolani nusxalash',
+    copied: 'Nusxalandi ✓',
+    text: 'DiniQuiz’da {score} ball to‘pladim! Siz ham sinab ko‘ring:',
   },
   leaderboard: {
     back: '← Bosh sahifa',

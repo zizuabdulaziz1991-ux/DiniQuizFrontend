@@ -10,6 +10,13 @@ import type {
   SessionStart,
 } from '@/types/api'
 
+/** Sunucu uyuyorsa uyandırmak için; sonucu önemsemeyiz. */
+export const warmUp = () =>
+  http
+    .get('/health/')
+    .then(() => true)
+    .catch(() => false)
+
 export const getLanguages = () =>
   http.get<LanguagesResponse>('/languages/').then((r) => r.data)
 

@@ -11,6 +11,9 @@ services:
         value: "30"
       - key: VITE_FEEDBACK_DELAY_MS
         value: "1500"
+      # Paylaşım linki ve önizleme görseli için sitenin adresi (kendi alan adın olursa burayı değiştir)
+      - key: VITE_SITE_URL
+        value: https://diniquiz-frontend-c7to.onrender.com
     routes:
       # Vue Router (history modu) için tüm yolları index.html'e yönlendir
       - type: rewrite

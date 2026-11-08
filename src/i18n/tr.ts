@@ -1,5 +1,5 @@
 const tr = {
-  app: { language: 'Dil' },
+  app: { language: 'Dil', waking: 'Sunucu uyanıyor, birkaç saniye bekle…' },
   common: { loading: 'Yükleniyor…', retry: 'Tekrar dene' },
   home: {
     tagline: 'Hızlı, eğlenceli dini bilgi yarışması. Kayıt yok, hemen oyna!',
@@ -48,6 +48,13 @@ const tr = {
     rejected: 'Bu isim kabul edilmedi. Başka bir isim dene.',
     alreadySaved: 'Bu quiz için isim zaten kaydedilmiş.',
     saveError: 'İsim kaydedilemedi. Tekrar dene.',
+  },
+  share: {
+    title: 'Arkadaşlarınla paylaş',
+    native: 'Paylaş',
+    copy: 'Linki kopyala',
+    copied: 'Kopyalandı ✓',
+    text: "DiniQuiz'de {score} puan yaptım! Sen de dene:",
   },
   leaderboard: {
     back: '← Ana ekran',
