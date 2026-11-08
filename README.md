@@ -11,7 +11,7 @@ DiniQuiz dini bilgi yarışmasının web arayüzü. **Vue 3 + Vite + TypeScript*
 - Kayıt olmadan hemen oynama
 - 5 kategori: Genel İslami İlimler, Siyer, İslam Tarihi, Sahabe Hayatı, Kur'an
 - Her ekranda **tek soru**; cevap vermeden sonrakine geçilemez
-- Soru başına **15 sn** dairesel sayaç
+- Soru başına **30 sn** dairesel sayaç
 - Doğru/yanlış geri bildirimi ve puan animasyonu
 - Quiz sonunda isim girişi ve **Top 10 skor tablosu**
 - Mobil öncelikli, açık ve canlı tema
@@ -51,7 +51,7 @@ diniquiz-frontend/
 │   ├── components/
 │   │   ├── AppButton.vue
 │   │   ├── CategoryCard.vue
-│   │   ├── TimerRing.vue       # 15 sn dairesel sayaç
+│   │   ├── TimerRing.vue       # 30 sn dairesel sayaç
 │   │   ├── ProgressBar.vue
 │   │   ├── ChoiceButton.vue    # A/B/C/D şık butonu (normal/doğru/yanlış durumları)
 │   │   ├── ScorePop.vue        # "+138" animasyonu
@@ -103,7 +103,7 @@ Uygulama: http://localhost:5173
 
 ```env
 VITE_API_BASE_URL=http://localhost:8000/api/v1
-VITE_TIME_LIMIT_SECONDS=15
+VITE_TIME_LIMIT_SECONDS=30
 VITE_FEEDBACK_DELAY_MS=1500
 ```
 

@@ -7,7 +7,7 @@ export const useQuizStore = defineStore('quiz', {
   state: () => ({
     sessionId: null as string | null,
     totalQuestions: 20,
-    timeLimit: Number(import.meta.env.VITE_TIME_LIMIT_SECONDS ?? 15),
+    timeLimit: Number(import.meta.env.VITE_TIME_LIMIT_SECONDS ?? 30),
     current: null as CurrentQuestion | null,
     lastAnswer: null as AnswerResult | null,
     score: 0,

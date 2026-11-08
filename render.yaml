@@ -8,7 +8,7 @@ services:
       - key: VITE_API_BASE_URL
         value: https://diniquiz-backend-0ikk.onrender.com/api/v1
       - key: VITE_TIME_LIMIT_SECONDS
-        value: "15"
+        value: "30"
       - key: VITE_FEEDBACK_DELAY_MS
         value: "1500"
     routes:
