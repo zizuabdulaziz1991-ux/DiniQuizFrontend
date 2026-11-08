@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">DiniQuiz</string>
+    <string name="title_activity_main">DiniQuiz</string>
+    <string name="package_name">com.diniquiz.app</string>
+    <string name="custom_url_scheme">com.diniquiz.app</string>
+</resources>

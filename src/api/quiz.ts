@@ -1,3 +1,4 @@
+import { Capacitor } from '@capacitor/core'
 import { http } from './client'
 import type {
   AnswerResult,
@@ -9,6 +10,12 @@ import type {
   QuizResult,
   SessionStart,
 } from '@/types/api'
+
+/** Backend'e hangi platformdan oynandığını bildirir: web | android | ios. */
+function platform(): 'web' | 'android' | 'ios' {
+  const p = Capacitor.getPlatform()
+  return p === 'android' || p === 'ios' ? p : 'web'
+}
 
 /** Sunucu uyuyorsa uyandırmak için; sonucu önemsemeyiz. */
 export const warmUp = () =>
@@ -25,7 +32,7 @@ export const getCategories = (lang?: string) =>
 
 export const startSession = (category: string, language: string) =>
   http
-    .post<SessionStart>('/sessions/', { category, platform: 'web', language })
+    .post<SessionStart>('/sessions/', { category, platform: platform(), language })
     .then((r) => r.data)
 
 export const getCurrent = (id: string) =>

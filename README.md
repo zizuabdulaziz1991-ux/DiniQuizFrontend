@@ -241,3 +241,38 @@ Mobil uygulama aynı backend API'sini kullanacaktır. Bu Vue kodunu yeniden kull
 ## İlgili Repo
 
 - **diniquiz-backend** — Django REST API ve PostgreSQL
+
+---
+
+## Android Uygulaması
+
+Web arayüzü **Capacitor** ile Android uygulamasına sarılır (`android/` klasörü). Aynı backend API'si kullanılır.
+
+### Gereksinimler
+
+- Android Studio ve Android SDK
+- Telefonda Geliştirici seçenekleri ve **USB hata ayıklama** açık
+- Backend'de `CORS_ALLOWED_ORIGINS` içinde `https://localhost` (Capacitor uygulaması bu origin ile istek atar)
+
+### Çalıştırma
+
+```bash
+npm run build:android   # canlı API ile derler (.env.android) ve android/ klasörüne aktarır
+npm run android:open    # Android Studio'yu açar; telefonu seçip Run ▶'a bas
+```
+
+Komut satırından APK üretmek için (`JAVA_HOME` Android Studio'nun `jbr` klasörü olmalı):
+
+```bash
+cd android
+gradlew.bat assembleDebug
+adb install -r app/build/outputs/apk/debug/app-debug.apk
+```
+
+### Önemli notlar
+
+- **Gradle 9.5.0** kullanılır. Android Gradle Plugin 8.13, Gradle 9.6 ile çalışmaz.
+- Android derlemesi `.env.android` dosyasını kullanır (canlı API adresi). Yerel geliştirme `.env` kullanır.
+- `appId` (`com.diniquiz.app`) Google Play'e ilk yüklemeden sonra değiştirilemez; yayından önce `capacitor.config.ts` içinde belirleyin.
+- Simgeler ve açılış ekranı `tools/make_android_assets.py` ile üretilir (`python tools/make_android_assets.py android/app/src/main/res`).
+- Play Store için imzalı `release` derlemesi, gizlilik politikası sayfası ve geliştirici hesabı gerekir.
