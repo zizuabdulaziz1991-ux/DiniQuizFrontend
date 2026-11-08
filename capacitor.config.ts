@@ -12,6 +12,11 @@ const config: CapacitorConfig = {
   android: {
     backgroundColor: '#F7F5FF',
   },
+  plugins: {
+    // İstekler Android'in yerel ağ katmanından gider; tarayıcı CORS denetimi uygulanmaz.
+    // (Backend'e https://localhost eklenirse bu ayar olmadan da çalışır, zarar vermez.)
+    CapacitorHttp: { enabled: true },
+  },
 }
 
 export default config

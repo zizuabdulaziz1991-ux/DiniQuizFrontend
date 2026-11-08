@@ -252,7 +252,7 @@ Web arayüzü **Capacitor** ile Android uygulamasına sarılır (`android/` klas
 
 - Android Studio ve Android SDK
 - Telefonda Geliştirici seçenekleri ve **USB hata ayıklama** açık
-- Backend'de `CORS_ALLOWED_ORIGINS` içinde `https://localhost` (Capacitor uygulaması bu origin ile istek atar)
+- Uygulama istekleri `CapacitorHttp` ile Android'in yerel ağ katmanından atar (`capacitor.config.ts`), bu yüzden tarayıcı CORS denetimi uygulanmaz. Backend'de `CORS_ALLOWED_ORIGINS` içine `https://localhost` eklenmesi yine de önerilir.
 
 ### Çalıştırma
 
