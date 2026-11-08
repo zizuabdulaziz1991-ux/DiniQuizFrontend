@@ -45,7 +45,8 @@ onMounted(async () => {
 <template>
   <section>
     <RouterLink to="/" class="text-sm font-bold text-muted">← Ana ekran</RouterLink>
-    <h1 class="mb-4 mt-2 text-3xl font-black text-primary">Skor Tablosu</h1>
+    <h1 class="mb-1 mt-2 text-3xl font-black text-primary">Skor Tablosu</h1>
+    <p class="mb-4 text-sm font-semibold text-muted">Aynı isimle oynanan oyunların puanları toplanır.</p>
 
     <div class="-mx-4 mb-4 flex gap-2 overflow-x-auto px-4 pb-2" role="tablist">
       <button

@@ -62,11 +62,17 @@ export interface NameResult {
 export interface LeaderboardEntry {
   rank: number
   player_name: string
+  /** Sıralamada kullanılan puan (toplam modunda total_score ile aynı). */
   score: number
+  total_score?: number
+  best_score?: number
+  games_played?: number
   finished_at: string
 }
 
 export interface Leaderboard {
   category: string | null
+  /** 'total': aynı isimli oyuncunun oyunları toplanır. */
+  mode?: string
   entries: LeaderboardEntry[]
 }
