@@ -122,6 +122,10 @@ onBeforeUnmount(() => {
     </div>
 
     <template v-if="current">
+      <p class="text-center text-xs font-extrabold uppercase tracking-wide text-primary">
+        {{ t('quiz.level', { n: store.level }) }}
+      </p>
+
       <header class="flex items-center gap-4">
         <div class="flex-1">
           <ProgressBar :index="current.index + 1" :total="current.total" />

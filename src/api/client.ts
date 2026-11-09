@@ -1,6 +1,7 @@
 import axios, { type AxiosError, type InternalAxiosRequestConfig } from 'axios'
 import { currentLocale } from '@/i18n'
 import { slowRequests } from '@/composables/useServerStatus'
+import { getPlayerId } from '@/utils/playerId'
 
 declare module 'axios' {
   interface AxiosRequestConfig {
@@ -25,6 +26,8 @@ const KEY = 'diniquiz.session'
 export interface StoredSession {
   sessionId: string
   token: string
+  category?: string
+  level?: number
 }
 
 export function saveSession(s: StoredSession): void {
@@ -85,6 +88,7 @@ function endWaking(config: { __waking?: boolean }): void {
 
 http.interceptors.request.use((config) => {
   config.headers.set('Accept-Language', currentLocale())
+  config.headers.set('X-Player-Id', getPlayerId())
   const s = loadSession()
   if (s && config.url?.includes('/sessions/' + s.sessionId)) {
     config.headers.set('X-Session-Token', s.token)

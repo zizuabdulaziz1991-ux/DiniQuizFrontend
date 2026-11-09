@@ -3,17 +3,14 @@ import { onMounted, ref, watch } from 'vue'
 import { RouterLink, useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { getCategories } from '@/api/quiz'
-import { useQuizStore } from '@/stores/quiz'
 import type { Category } from '@/types/api'
 import CategoryCard from '@/components/CategoryCard.vue'
 import AppButton from '@/components/AppButton.vue'
 
 const router = useRouter()
 const { t, locale } = useI18n()
-const store = useQuizStore()
 const categories = ref<Category[]>([])
 const loading = ref(true)
-const starting = ref(false)
 const error = ref('')
 
 async function load() {
@@ -28,18 +25,9 @@ async function load() {
   }
 }
 
-async function choose(slug: string) {
-  if (starting.value) return
-  starting.value = true
-  error.value = ''
-  try {
-    const id = await store.start(slug)
-    await router.push({ name: 'quiz', params: { sessionId: id } })
-  } catch {
-    error.value = t('categories.startError')
-  } finally {
-    starting.value = false
-  }
+/** Kategoriye girince seviye ekranı açılır (1. seviye açık, diğerleri kilitli). */
+function choose(slug: string) {
+  router.push({ name: 'levels', params: { slug } })
 }
 
 watch(locale, load)
@@ -57,13 +45,7 @@ onMounted(load)
       <AppButton @click="load">{{ t('common.retry') }}</AppButton>
     </div>
     <div v-else class="space-y-3">
-      <CategoryCard
-        v-for="c in categories"
-        :key="c.id"
-        :category="c"
-        :disabled="starting"
-        @select="choose"
-      />
+      <CategoryCard v-for="c in categories" :key="c.id" :category="c" @select="choose" />
     </div>
   </section>
 </template>

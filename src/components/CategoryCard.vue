@@ -1,10 +1,16 @@
 <script setup lang="ts">
+import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import type { Category } from '@/types/api'
 
-defineProps<{ category: Category; disabled?: boolean }>()
+const props = defineProps<{ category: Category; disabled?: boolean }>()
 defineEmits<{ select: [slug: string] }>()
 const { t } = useI18n()
+const badge = computed(() =>
+  props.category.level_count
+    ? t('categories.levelCount', { n: props.category.level_count })
+    : t('categories.questionCount', { n: props.category.question_count }),
+)
 </script>
 
 <template>
@@ -12,7 +18,7 @@ const { t } = useI18n()
     type="button"
     :disabled="disabled"
     class="card flex w-full items-center gap-4 p-4 text-left transition hover:-translate-y-0.5 focus:outline-none focus-visible:ring-4 focus-visible:ring-primary/40 disabled:opacity-60"
-    :aria-label="`${category.name}, ${t('categories.questionCount', { n: category.question_count })}`"
+    :aria-label="`${category.name}, ${badge}`"
     @click="$emit('select', category.slug)"
   >
     <span
@@ -27,7 +33,7 @@ const { t } = useI18n()
       <span class="block text-sm text-muted">{{ category.description }}</span>
     </span>
     <span class="shrink-0 rounded-full bg-bg px-3 py-1 text-sm font-bold text-muted">
-      {{ t('categories.questionCount', { n: category.question_count }) }}
+      {{ badge }}
     </span>
   </button>
 </template>

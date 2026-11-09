@@ -7,7 +7,7 @@ import type { AnswerResult, CurrentQuestion, QuizResult } from '@/types/api'
 export const useQuizStore = defineStore('quiz', {
   state: () => ({
     sessionId: null as string | null,
-    totalQuestions: 20,
+    totalQuestions: 10,
     timeLimit: Number(import.meta.env.VITE_TIME_LIMIT_SECONDS ?? 30),
     current: null as CurrentQuestion | null,
     lastAnswer: null as AnswerResult | null,
@@ -15,6 +15,7 @@ export const useQuizStore = defineStore('quiz', {
     submitting: false,
     result: null as QuizResult | null,
     categorySlug: null as string | null,
+    level: 1,
   }),
   getters: {
     hasSession: (s) => !!s.sessionId,
@@ -22,16 +23,27 @@ export const useQuizStore = defineStore('quiz', {
   actions: {
     restore() {
       const s = loadSession()
-      if (s && !this.sessionId) this.sessionId = s.sessionId
+      if (s && !this.sessionId) {
+        this.sessionId = s.sessionId
+        if (s.category) this.categorySlug = s.category
+        if (s.level) this.level = s.level
+      }
       return !!this.sessionId
     },
-    async start(slug: string) {
-      const data = await api.startSession(slug, currentLocale())
-      saveSession({ sessionId: data.session_id, token: data.token })
+    async start(slug: string, level = 1) {
+      const data = await api.startSession(slug, currentLocale(), level)
+      const startedLevel = data.level ?? level
+      saveSession({
+        sessionId: data.session_id,
+        token: data.token,
+        category: data.category,
+        level: startedLevel,
+      })
       this.sessionId = data.session_id
       this.totalQuestions = data.total_questions
       this.timeLimit = data.time_limit_seconds
       this.categorySlug = data.category
+      this.level = startedLevel
       this.current = null
       this.lastAnswer = null
       this.result = null
@@ -43,6 +55,7 @@ export const useQuizStore = defineStore('quiz', {
       this.lastAnswer = null
       this.current = await api.getCurrent(this.sessionId)
       this.score = this.current.score
+      if (this.current.level) this.level = this.current.level
       return this.current
     },
     /** Çift gönderimi engeller; ikinci çağrı null döner. */

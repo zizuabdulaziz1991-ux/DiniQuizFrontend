@@ -6,6 +6,25 @@ export interface Category {
   color: string
   icon: string
   question_count: number
+  /** Kategorideki seviye sayısı (10). */
+  level_count?: number
+}
+
+export type LevelStatus = 'unlocked' | 'completed' | 'locked' | 'empty'
+
+export interface LevelInfo {
+  level: number
+  status: LevelStatus
+  question_count: number
+  best_correct?: number
+  attempts?: number
+}
+
+export interface LevelsResponse {
+  category: string
+  level_count: number
+  questions_per_level: number
+  levels: LevelInfo[]
 }
 
 export interface LanguageInfo {
@@ -24,6 +43,7 @@ export interface SessionStart {
   token: string
   category: string
   language?: string
+  level?: number
   total_questions: number
   time_limit_seconds: number
 }
@@ -41,6 +61,7 @@ export interface Question {
 }
 
 export interface CurrentQuestion {
+  level?: number
   index: number
   total: number
   question: Question
@@ -64,6 +85,15 @@ export interface QuizResult {
   empty_count: number
   max_score: number
   rank_preview: number
+  total_questions?: number
+  level?: number
+  /** Tüm sorular doğru (%100). */
+  perfect?: boolean
+  level_passed?: boolean
+  /** perfect ise sonraki seviye numarası; yoksa null. */
+  next_level?: number | null
+  /** Bu oyunla sonraki seviye YENİ açıldıysa true. */
+  newly_unlocked?: boolean
 }
 
 export interface NameResult {

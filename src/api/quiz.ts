@@ -1,11 +1,13 @@
 import { Capacitor } from '@capacitor/core'
 import { http } from './client'
+import { getPlayerId } from '@/utils/playerId'
 import type {
   AnswerResult,
   Category,
   CurrentQuestion,
   Leaderboard,
   LanguagesResponse,
+  LevelsResponse,
   NameResult,
   QuizResult,
   SessionStart,
@@ -30,9 +32,18 @@ export const getLanguages = () =>
 export const getCategories = (lang?: string) =>
   http.get<Category[]>('/categories/', { params: { lang } }).then((r) => r.data)
 
-export const startSession = (category: string, language: string) =>
+export const getLevels = (slug: string) =>
+  http.get<LevelsResponse>(`/categories/${slug}/levels/`).then((r) => r.data)
+
+export const startSession = (category: string, language: string, level = 1) =>
   http
-    .post<SessionStart>('/sessions/', { category, platform: platform(), language })
+    .post<SessionStart>('/sessions/', {
+      category,
+      platform: platform(),
+      language,
+      level,
+      player_id: getPlayerId(),
+    })
     .then((r) => r.data)
 
 export const getCurrent = (id: string) =>

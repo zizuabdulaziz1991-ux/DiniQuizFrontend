@@ -5,6 +5,7 @@ export const router = createRouter({
   routes: [
     { path: '/', name: 'home', component: () => import('@/views/HomeView.vue') },
     { path: '/kategoriler', name: 'categories', component: () => import('@/views/CategoryView.vue') },
+    { path: '/kategori/:slug', name: 'levels', component: () => import('@/views/LevelView.vue'), props: true },
     { path: '/quiz/:sessionId', name: 'quiz', component: () => import('@/views/QuizView.vue'), props: true },
     { path: '/sonuc/:sessionId', name: 'result', component: () => import('@/views/ResultView.vue'), props: true },
     { path: '/isim/:sessionId', name: 'name', component: () => import('@/views/NameEntryView.vue'), props: true },
