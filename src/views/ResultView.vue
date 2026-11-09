@@ -135,9 +135,12 @@ onMounted(() => {
       <p v-else-if="perfect && !nextLevel" class="card w-full p-3 font-extrabold text-success" role="status">
         {{ t('result.perfectNoNext') }}
       </p>
-      <p v-else-if="!perfect" class="card w-full p-3 text-sm font-bold text-ink" role="status">
-        {{ t('result.needPerfect', { correct: result.correct_count, total: totalQuestions }) }}
-      </p>
+      <div v-else-if="!perfect" class="card w-full space-y-1 p-3" role="status">
+        <p class="text-sm font-bold text-ink">
+          {{ t('result.needPerfect', { correct: result.correct_count, total: totalQuestions }) }}
+        </p>
+        <p class="text-xs font-semibold text-muted">{{ t('result.needPerfectRule') }}</p>
+      </div>
 
       <ShareButtons :score="result.score" />
 

@@ -40,7 +40,9 @@ const tr = {
     loadError: 'Sonuç yüklenemedi.',
     unlocked: 'Seviye {n} açıldı! 🎉',
     perfectNoNext: 'Harikasın! Bu seviyeyi %100 tamamladın. Yeni seviyeler yakında 🎉',
-    needPerfect: 'Sonraki seviyeyi açmak için tüm soruları doğru bilmelisin ({correct}/{total}).',
+    needPerfect:
+      'Maşallah! {correct}/{total} doğru 👏 Bu sorular bilgilerini pekiştirmen için. Bir kez daha dene, sonraki seviye seni bekliyor! 🌟',
+    needPerfectRule: 'Sonraki seviye tüm soruları doğru bildiğinde açılır.',
     nextLevel: 'Sonraki seviye',
     retryLevel: 'Seviyeyi tekrar dene',
     toLevels: 'Seviyeler',

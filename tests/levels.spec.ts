@@ -155,7 +155,8 @@ describe('ResultView seviye sonucu', () => {
 
   it('%100 değilse hedefi söyler ve "Seviyeyi tekrar dene" sunar', async () => {
     const w = await mountResult({ perfect: false, correct_count: 7, wrong_count: 3, level_passed: false, next_level: null })
-    expect(w.text()).toContain('(7/10)')
+    expect(w.text()).toContain('Maşallah! 7/10 doğru')
+    expect(w.text()).toContain('tüm soruları doğru bildiğinde açılır')
     expect(w.text()).toContain('Seviyeyi tekrar dene')
     expect(w.text()).not.toContain('açıldı')
   })

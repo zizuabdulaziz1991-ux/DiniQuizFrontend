@@ -43,7 +43,9 @@ const uz: typeof tr = {
     loadError: 'Natijani yuklab bo‘lmadi.',
     unlocked: '{n}-daraja ochildi! 🎉',
     perfectNoNext: 'Ajoyib! Bu darajani 100% bajardingiz. Yangi darajalar tez orada 🎉',
-    needPerfect: 'Keyingi darajani ochish uchun barcha savollarga to‘g‘ri javob bering ({correct}/{total}).',
+    needPerfect:
+      'Barakalla! {correct}/{total} to‘g‘ri javob 👏 Bu savollar bilimingizni mustahkamlash uchun. Yana bir bor urinib ko‘ring, keyingi daraja sizni kutmoqda! 🌟',
+    needPerfectRule: 'Keyingi daraja barcha savollarga to‘g‘ri javob berganingizda ochiladi.',
     nextLevel: 'Keyingi daraja',
     retryLevel: 'Darajani qayta urinish',
     toLevels: 'Darajalar',
