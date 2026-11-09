@@ -69,12 +69,22 @@ async function submit(choiceId: number | null) {
   if (store.submitting || answered.value || !current.value) return
   stopTimer()
   selectedId.value = choiceId
+  const answeredQuestion = current.value.question
   try {
     const res = await store.answer(choiceId)
     if (!res) return
+    if (!res.is_correct) {
+      store.addMistake({
+        question: answeredQuestion,
+        correctChoiceId: res.correct_choice_id,
+        explanation: res.explanation ?? null,
+      })
+    }
     nextTimer = setTimeout(() => {
-      if (res.is_last) leaveTo(`/sonuc/${props.sessionId}`)
-      else loadQuestion()
+      if (res.is_last) {
+        // Yanlışı varsa önce yalnızca yanlışlar tekrar sorulur, sonra sonuç ekranı açılır.
+        leaveTo(store.mistakes.length ? `/duzelt/${props.sessionId}` : `/sonuc/${props.sessionId}`)
+      } else loadQuestion()
     }, feedbackDelay)
   } catch (e) {
     const st = apiStatus(e)

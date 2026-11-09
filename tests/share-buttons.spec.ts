@@ -23,6 +23,15 @@ describe('ShareButtons', () => {
     expect(tg.searchParams.get('text')).toContain('1868')
   })
 
+  it('davet varyantı puan yerine davet metnini ve başlığını kullanır', () => {
+    const w = mount(ShareButtons, { props: { invite: true }, global: { plugins: [i18n] } })
+    expect(w.text()).toContain('Arkadaşını quize davet et')
+    const wa = decodeURIComponent(w.findAll('a')[0].attributes('href')!)
+    expect(wa).toContain('Hadi DiniQuiz oynayalım')
+    expect(wa).toContain('https://diniquiz.test')
+    expect(wa).not.toMatch(/\d{3,}/)
+  })
+
   it('dış bağlantılar güvenli açılır', () => {
     for (const a of mk().findAll('a')) {
       expect(a.attributes('target')).toBe('_blank')

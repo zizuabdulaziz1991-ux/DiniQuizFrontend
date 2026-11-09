@@ -4,7 +4,7 @@ import axios from 'axios'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { useQuizStore } from '@/stores/quiz'
-import { getResult } from '@/api/quiz'
+import { getLevels, getResult } from '@/api/quiz'
 import { apiStatus, loadSession } from '@/api/client'
 import type { QuizResult } from '@/types/api'
 import AppButton from '@/components/AppButton.vue'
@@ -18,6 +18,8 @@ const result = ref<QuizResult | null>(null)
 const error = ref('')
 const actionError = ref('')
 const starting = ref(false)
+/** Sonraki seviyenin durumu (boşsa 'Sonraki seviye' sunulmaz). */
+const nextStatus = ref<string | null>(null)
 
 // Sayfa yenilense bile kategori/seviye oturum kaydından okunur.
 const stored = loadSession()
@@ -33,7 +35,11 @@ const perfect = computed(() => {
   if (!r) return false
   return r.perfect ?? (r.correct_count > 0 && r.wrong_count + r.empty_count === 0)
 })
-const nextLevel = computed(() => (perfect.value ? (result.value?.next_level ?? null) : null))
+const nextLevel = computed(() => {
+  if (!perfect.value) return null
+  const n = result.value?.next_level ?? null
+  return n && nextStatus.value !== 'empty' ? n : null
+})
 const top10 = computed(() => !!result.value && result.value.rank_preview <= 10)
 const celebrate = computed(() => top10.value || perfect.value)
 
@@ -43,10 +49,23 @@ const confetti = Array.from({ length: 24 }, (_, i) => ({
   color: ['#6C5CE7', '#00C2A8', '#FFB020', '#FF5A6E', '#3D8BFF'][i % 5],
 }))
 
+/** Sonraki seviyede henüz soru yoksa (ör. onay bekliyor) butonu gizlemek için durumunu öğrenir. */
+async function checkNextLevel() {
+  const next = result.value?.next_level
+  if (!perfect.value || !next || !slug.value) return
+  try {
+    const info = await getLevels(slug.value)
+    nextStatus.value = info?.levels?.find((l) => l.level === next)?.status ?? null
+  } catch {
+    /* bilgi alınamazsa sunucunun next_level değerine güven */
+  }
+}
+
 async function load() {
   error.value = ''
   try {
     result.value = await getResult(props.sessionId)
+    await checkNextLevel()
   } catch (e) {
     const st = apiStatus(e)
     if (st === 403 || st === 404) router.replace('/kategoriler')
@@ -65,7 +84,12 @@ async function startLevel(n: number) {
     const code = axios.isAxiosError(e)
       ? (e.response?.data as { code?: string } | undefined)?.code
       : undefined
-    actionError.value = code === 'level_locked' ? t('levels.lockedError') : t('levels.startError')
+    actionError.value =
+      code === 'level_locked'
+        ? t('levels.lockedError')
+        : code === 'level_empty'
+          ? t('levels.emptyError')
+          : t('levels.startError')
   } finally {
     starting.value = false
   }

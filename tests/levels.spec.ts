@@ -161,6 +161,31 @@ describe('ResultView seviye sonucu', () => {
     expect(w.text()).not.toContain('açıldı')
   })
 
+  it('sonraki seviye henüz boşsa (onay bekliyor) "Sonraki seviye" sunulmaz', async () => {
+    api.getLevels.mockResolvedValue({
+      category: 'kuran', level_count: 10, questions_per_level: 10,
+      levels: [{ level: 3, status: 'empty', question_count: 0 }],
+    })
+    const w = await mountResult({ perfect: true, next_level: 3, newly_unlocked: true })
+    expect(w.text()).toContain('Yeni seviyeler yakında')
+    expect(w.text()).not.toContain('Seviye 3 açıldı')
+    expect(w.findAll('button').some((b) => b.text() === 'Sonraki seviye')).toBe(false)
+  })
+
+  it('sunucu level_empty dönerse "henüz soru yok" mesajı gösterir', async () => {
+    api.getLevels.mockResolvedValue({
+      category: 'kuran', level_count: 10, questions_per_level: 10,
+      levels: [{ level: 2, status: 'unlocked', question_count: 10 }],
+    })
+    api.startSession.mockRejectedValue(
+      Object.assign(new Error('409'), { isAxiosError: true, response: { status: 409, data: { code: 'level_empty' } } }),
+    )
+    const w = await mountResult({ perfect: true, next_level: 2, newly_unlocked: true })
+    await w.findAll('button').find((b) => b.text() === 'Sonraki seviye')!.trigger('click')
+    await flushPromises()
+    expect(w.text()).toContain('henüz soru yok')
+  })
+
   it('sonraki seviye "Sonraki seviye" ile o seviyeyi başlatır', async () => {
     api.startSession.mockResolvedValue({
       session_id: 's2', token: 't2', category: 'kuran', level: 2, total_questions: 10, time_limit_seconds: 30,

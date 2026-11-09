@@ -69,6 +69,13 @@ export interface CurrentQuestion {
   score: number
 }
 
+/** Yanlış/boş bırakılan soru: test sonunda doğrusu bulunana kadar tekrar sorulur. */
+export interface ReviewItem {
+  question: Question
+  correctChoiceId: number
+  explanation: string | null
+}
+
 export interface AnswerResult {
   is_correct: boolean
   correct_choice_id: number

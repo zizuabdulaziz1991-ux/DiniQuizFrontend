@@ -2,7 +2,7 @@ import { defineStore } from 'pinia'
 import * as api from '@/api/quiz'
 import { currentLocale } from '@/i18n'
 import { clearSession, loadSession, saveSession } from '@/api/client'
-import type { AnswerResult, CurrentQuestion, QuizResult } from '@/types/api'
+import type { AnswerResult, CurrentQuestion, QuizResult, ReviewItem } from '@/types/api'
 
 export const useQuizStore = defineStore('quiz', {
   state: () => ({
@@ -16,6 +16,7 @@ export const useQuizStore = defineStore('quiz', {
     result: null as QuizResult | null,
     categorySlug: null as string | null,
     level: 1,
+    mistakes: [] as ReviewItem[],
   }),
   getters: {
     hasSession: (s) => !!s.sessionId,
@@ -48,6 +49,7 @@ export const useQuizStore = defineStore('quiz', {
       this.lastAnswer = null
       this.result = null
       this.score = 0
+      this.mistakes = []
       return data.session_id
     },
     async loadCurrent() {
@@ -70,6 +72,12 @@ export const useQuizStore = defineStore('quiz', {
       } finally {
         this.submitting = false
       }
+    },
+    addMistake(item: ReviewItem) {
+      this.mistakes.push(item)
+    },
+    resolveMistake() {
+      this.mistakes.shift()
     },
     async loadResult() {
       if (!this.sessionId) throw new Error('no-session')

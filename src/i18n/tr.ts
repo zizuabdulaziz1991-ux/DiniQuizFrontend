@@ -59,6 +59,13 @@ const tr = {
     alreadySaved: 'Bu quiz için isim zaten kaydedilmiş.',
     saveError: 'İsim kaydedilemedi. Tekrar dene.',
   },
+  review: {
+    title: 'Yanlışlarını düzeltelim 💪',
+    subtitle: 'Yanlış yaptığın soruları bir daha deneyelim. Hepsini doğru bilince sonuca geçeriz.',
+    remaining: 'Kalan: {n}',
+    wrong: 'Olmadı, başka bir şık dene.',
+    correct: 'Doğru! 🎉',
+  },
   levels: {
     back: '← Kategoriler',
     title: 'Seviye seç',
@@ -78,6 +85,8 @@ const tr = {
     native: 'Paylaş',
     copy: 'Linki kopyala',
     copied: 'Kopyalandı ✓',
+    inviteTitle: 'Arkadaşını quize davet et',
+    inviteText: 'Hadi DiniQuiz oynayalım! Bakalım kim daha çok biliyor 😄',
     text: "DiniQuiz'de {score} puan yaptım! Sen de dene:",
   },
   leaderboard: {

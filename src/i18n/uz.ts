@@ -62,6 +62,13 @@ const uz: typeof tr = {
     alreadySaved: 'Bu viktorina uchun ism allaqachon saqlangan.',
     saveError: 'Ismni saqlab bo‘lmadi. Qayta urinib ko‘ring.',
   },
+  review: {
+    title: 'Xatolarni to‘g‘rilaymiz 💪',
+    subtitle: 'Xato qilgan savollaringizni yana bir bor sinab ko‘ramiz. Hammasini to‘g‘ri bilsangiz, natijaga o‘tamiz.',
+    remaining: 'Qoldi: {n}',
+    wrong: 'Bo‘lmadi, boshqa variantni sinab ko‘ring.',
+    correct: 'To‘g‘ri! 🎉',
+  },
   levels: {
     back: '← Toifalar',
     title: 'Darajani tanlang',
@@ -81,6 +88,8 @@ const uz: typeof tr = {
     native: 'Ulashish',
     copy: 'Havolani nusxalash',
     copied: 'Nusxalandi ✓',
+    inviteTitle: 'Do‘stingizni viktorinaga taklif qiling',
+    inviteText: 'Keling, DiniQuiz’da musobaqalashamiz! Kim ko‘proq biladi ekan 😄',
     text: 'DiniQuiz’da {score} ball to‘pladim! Siz ham sinab ko‘ring:',
   },
   leaderboard: {

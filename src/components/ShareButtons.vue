@@ -3,11 +3,12 @@ import { computed, onBeforeUnmount, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { siteUrl, telegramUrl, whatsappUrl } from '@/utils/share'
 
-const props = defineProps<{ score: number }>()
+const props = withDefaults(defineProps<{ score?: number; invite?: boolean }>(), { score: 0, invite: false })
 const { t } = useI18n()
 
 const url = computed(() => siteUrl())
-const text = computed(() => t('share.text', { score: props.score }))
+const text = computed(() => (props.invite ? t('share.inviteText') : t('share.text', { score: props.score })))
+const title = computed(() => (props.invite ? t('share.inviteTitle') : t('share.title')))
 const canNativeShare = typeof navigator !== 'undefined' && typeof navigator.share === 'function'
 const copied = ref(false)
 let timer: ReturnType<typeof setTimeout> | null = null
@@ -40,8 +41,8 @@ const linkClass =
 </script>
 
 <template>
-  <section class="card w-full space-y-3 p-4" :aria-label="t('share.title')">
-    <h2 class="text-sm font-extrabold text-muted">{{ t('share.title') }}</h2>
+  <section class="card w-full space-y-3 p-4" :aria-label="title">
+    <h2 class="text-sm font-extrabold text-muted">{{ title }}</h2>
     <button
       v-if="canNativeShare"
       type="button"

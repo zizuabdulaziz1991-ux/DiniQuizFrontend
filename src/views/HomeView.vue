@@ -2,6 +2,7 @@
 import { RouterLink } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import AppButton from '@/components/AppButton.vue'
+import ShareButtons from '@/components/ShareButtons.vue'
 const { t } = useI18n()
 </script>
 
@@ -22,5 +23,6 @@ const { t } = useI18n()
         <AppButton variant="ghost">{{ t('home.leaderboard') }}</AppButton>
       </RouterLink>
     </div>
+    <ShareButtons invite />
   </section>
 </template>
