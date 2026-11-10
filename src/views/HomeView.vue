@@ -19,6 +19,9 @@ const { t } = useI18n()
       <RouterLink to="/kategoriler" class="block">
         <AppButton>{{ t('home.start') }}</AppButton>
       </RouterLink>
+      <RouterLink to="/yaris" class="block">
+        <AppButton variant="secondary">{{ t('duel.homeButton') }}</AppButton>
+      </RouterLink>
       <RouterLink to="/skor-tablosu" class="block">
         <AppButton variant="ghost">{{ t('home.leaderboard') }}</AppButton>
       </RouterLink>

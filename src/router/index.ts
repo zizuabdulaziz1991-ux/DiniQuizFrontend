@@ -5,6 +5,8 @@ export const router = createRouter({
   routes: [
     { path: '/', name: 'home', component: () => import('@/views/HomeView.vue') },
     { path: '/kategoriler', name: 'categories', component: () => import('@/views/CategoryView.vue') },
+    { path: '/yaris', name: 'duel-lobby', component: () => import('@/views/DuelLobbyView.vue') },
+    { path: '/duello/:code', name: 'duel-room', component: () => import('@/views/DuelRoomView.vue'), props: true },
     { path: '/kategori/:slug', name: 'levels', component: () => import('@/views/LevelView.vue'), props: true },
     { path: '/quiz/:sessionId', name: 'quiz', component: () => import('@/views/QuizView.vue'), props: true },
     { path: '/duzelt/:sessionId', name: 'review', component: () => import('@/views/ReviewView.vue'), props: true },

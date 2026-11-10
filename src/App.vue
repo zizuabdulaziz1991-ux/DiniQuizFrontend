@@ -8,7 +8,7 @@ import LanguageSwitcher from '@/components/LanguageSwitcher.vue'
 const route = useRoute()
 const { t } = useI18n()
 // Quiz sırasında dil değiştirilmez: sorular oturum başında seçilen dilde gelir.
-const showSwitcher = computed(() => route.name !== 'quiz')
+const showSwitcher = computed(() => route.name !== 'quiz' && route.name !== 'duel-room')
 
 // Android'de uygulama durum/gezinme çubuğunun altına uzanır; Capacitor güvenli alanı
 // --safe-area-inset-* değişkenleriyle verir (web'de env() ya da 0).

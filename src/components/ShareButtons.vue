@@ -3,12 +3,25 @@ import { computed, onBeforeUnmount, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { siteUrl, telegramUrl, whatsappUrl } from '@/utils/share'
 
-const props = withDefaults(defineProps<{ score?: number; invite?: boolean }>(), { score: 0, invite: false })
+const props = withDefaults(
+  defineProps<{
+    score?: number
+    invite?: boolean
+    customTitle?: string
+    customText?: string
+    customUrl?: string
+  }>(),
+  { score: 0, invite: false, customTitle: undefined, customText: undefined, customUrl: undefined },
+)
 const { t } = useI18n()
 
-const url = computed(() => siteUrl())
-const text = computed(() => (props.invite ? t('share.inviteText') : t('share.text', { score: props.score })))
-const title = computed(() => (props.invite ? t('share.inviteTitle') : t('share.title')))
+const url = computed(() => props.customUrl ?? siteUrl())
+const text = computed(
+  () => props.customText ?? (props.invite ? t('share.inviteText') : t('share.text', { score: props.score })),
+)
+const title = computed(
+  () => props.customTitle ?? (props.invite ? t('share.inviteTitle') : t('share.title')),
+)
 const canNativeShare = typeof navigator !== 'undefined' && typeof navigator.share === 'function'
 const copied = ref(false)
 let timer: ReturnType<typeof setTimeout> | null = null

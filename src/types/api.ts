@@ -125,3 +125,78 @@ export interface Leaderboard {
   mode?: string
   entries: LeaderboardEntry[]
 }
+
+// ---- 2 kişilik yarış (düello)
+export type DuelPhase = 'waiting' | 'countdown' | 'question' | 'reveal' | 'finished'
+
+export interface DuelPlayerView {
+  role?: 'host' | 'guest'
+  name: string | null
+  answered: boolean
+  correct: number
+  points: number
+  /** Rakip son 10 sn içinde yoklama yaptı mı. */
+  connected?: boolean
+}
+
+export interface DuelReveal {
+  index: number
+  correct_choice_id: number
+  explanation: string | null
+  my_choice_id: number | null
+  opponent_choice_id: number | null
+  my_correct: boolean
+  opponent_correct: boolean
+  my_points: number
+  opponent_points: number
+}
+
+export interface DuelResult {
+  winner: 'me' | 'opponent' | 'draw'
+  me: { correct: number; points: number }
+  opponent: { correct: number; points: number }
+}
+
+export interface DuelState {
+  code: string
+  status: 'waiting' | 'active' | 'finished' | 'expired'
+  phase: DuelPhase
+  category: string
+  level: number
+  total_questions: number
+  time_limit_seconds: number
+  starts_in_ms: number | null
+  index: number
+  question: Question | null
+  remaining_ms: number | null
+  me: DuelPlayerView
+  opponent: DuelPlayerView
+  reveal: DuelReveal | null
+  result: DuelResult | null
+}
+
+export interface DuelCreated {
+  code: string
+  role: 'host' | 'guest'
+  token: string
+  status: string
+  category: string
+  level: number
+  total_questions: number
+  time_limit_seconds: number
+  expires_in_seconds: number
+}
+
+export interface DuelJoined {
+  code: string
+  role: 'host' | 'guest'
+  token: string
+  status: string
+}
+
+export interface DuelAnswerResult {
+  is_correct: boolean
+  correct_choice_id: number
+  points: number
+  explanation: string | null
+}
