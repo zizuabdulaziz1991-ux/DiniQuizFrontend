@@ -249,6 +249,25 @@ describe('DuelRoomView', () => {
     expect(w.text()).toContain('Yeni yarış')
   })
 
+  it('süresi dolmuş yarışta (sonuç yok) kazanan göstermez, süre doldu der', async () => {
+    const { w } = await mountRoom(state({
+      status: 'expired', phase: 'finished', question: null, remaining_ms: null, result: null,
+    }))
+    expect(w.find('[data-testid="expired"]').text()).toContain('süresi dolmuş')
+    expect(w.find('[data-testid="outcome"]').exists()).toBe(false)
+  })
+
+  it('not_active hatasında durumu yeniler (geri sayımda/bitmişte cevap)', async () => {
+    api.answerDuel.mockRejectedValue(httpError(409, 'not_active'))
+    const { w } = await mountRoom(state())
+    const before = api.getDuel.mock.calls.length
+    await w.findAll('button')[0].trigger('click')
+    await flushPromises()
+    await vi.advanceTimersByTimeAsync(0)
+    expect(api.getDuel.mock.calls.length).toBeGreaterThan(before)
+    expect(w.text()).not.toContain('Cevap gönderilemedi')
+  })
+
   it('sunucu 404 dönerse bulunamadı mesajı gösterir', async () => {
     api.getDuel.mockRejectedValue(httpError(404))
     const w = mount(DuelRoomView, { props: { code: 'ABC123' }, global: { plugins: [i18n, makeRouter()] } })

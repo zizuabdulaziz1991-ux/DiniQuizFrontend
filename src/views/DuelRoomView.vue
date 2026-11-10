@@ -102,7 +102,12 @@ async function pick(choiceId: number) {
     const apiCode = axios.isAxiosError(e)
       ? (e.response?.data as { code?: string } | undefined)?.code
       : undefined
-    if (apiCode === 'already_answered' || apiCode === 'round_over' || apiCode === 'wrong_question') {
+    if (
+      apiCode === 'already_answered' ||
+      apiCode === 'round_over' ||
+      apiCode === 'not_active' ||
+      apiCode === 'wrong_question'
+    ) {
       polling.pollNow() // durum zaten ilerlemiş
     } else {
       myPick.value = null
@@ -192,8 +197,17 @@ onBeforeUnmount(() => {
         {{ t('duel.connectionLost') }}
       </p>
 
+      <!-- Süresi dolmuş yarış (sonuç yok) -->
+      <div v-if="state.status === 'expired'" class="flex flex-1 flex-col items-center justify-center gap-5 text-center" data-testid="expired">
+        <p class="text-xl font-extrabold text-danger">{{ t('duel.expired') }}</p>
+        <div class="w-full space-y-3">
+          <AppButton @click="router.push('/yaris')">{{ t('duel.newDuel') }}</AppButton>
+          <AppButton variant="ghost" @click="router.push('/')">{{ t('duel.toHome') }}</AppButton>
+        </div>
+      </div>
+
       <!-- Rakip bekleniyor -->
-      <div v-if="phase === 'waiting'" class="flex flex-1 flex-col justify-center gap-4 text-center">
+      <div v-else-if="phase === 'waiting'" class="flex flex-1 flex-col justify-center gap-4 text-center">
         <h1 class="text-2xl font-black text-primary">{{ t('duel.waitingTitle') }}</h1>
         <p class="text-sm font-semibold text-muted">{{ t('duel.waitingHint') }}</p>
         <div class="card p-5">
