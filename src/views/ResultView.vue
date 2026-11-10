@@ -9,6 +9,7 @@ import { apiStatus, loadSession } from '@/api/client'
 import type { QuizResult } from '@/types/api'
 import AppButton from '@/components/AppButton.vue'
 import ShareButtons from '@/components/ShareButtons.vue'
+import FireworksBurst from '@/components/FireworksBurst.vue'
 
 const props = defineProps<{ sessionId: string }>()
 const router = useRouter()
@@ -113,6 +114,7 @@ onMounted(() => {
 
 <template>
   <section class="relative flex flex-1 flex-col items-center justify-center gap-5 text-center">
+    <FireworksBurst v-if="perfect" />
     <template v-if="celebrate">
       <span
         v-for="(c, i) in confetti"

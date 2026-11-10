@@ -236,6 +236,26 @@ describe('DuelRoomView', () => {
     expect(w.findAll('button')[0].classes()).toContain('bg-danger')
   })
 
+  it('kazanınca havai fişek çıkar ve cihaz titrer; kaybedince çıkmaz', async () => {
+    const vibrate = vi.fn()
+    Object.defineProperty(navigator, 'vibrate', { value: vibrate, configurable: true })
+    const finished = (winner: string) => state({
+      status: 'finished', phase: 'finished', question: null, remaining_ms: null,
+      result: { winner, me: { correct: 7, points: 900 }, opponent: { correct: 6, points: 800 } },
+    })
+    const lost = await mountRoom(finished('opponent'))
+    expect(lost.w.find('[data-testid="fireworks"]').exists()).toBe(false)
+    expect(vibrate).not.toHaveBeenCalled()
+    const won = await mountRoom(finished('me'))
+    expect(won.w.find('[data-testid="fireworks"]').exists()).toBe(true)
+    expect(won.w.findAll('.firework-particle').length).toBe(8 * 16)
+    expect(vibrate).toHaveBeenCalled()
+    vi.advanceTimersByTime(6000)
+    await flushPromises()
+    expect(won.w.find('[data-testid="fireworks"]').exists()).toBe(false)
+    delete (navigator as unknown as Record<string, unknown>).vibrate
+  })
+
   it.each([
     ['me', 'Kazandın!'],
     ['opponent', 'rakip kazandı'],

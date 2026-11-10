@@ -147,6 +147,13 @@ describe('ResultView seviye sonucu', () => {
     expect(w.text()).not.toContain('Seviyeyi tekrar dene')
   })
 
+  it('10/10 yapınca havai fişek çıkar, eksik cevapta çıkmaz', async () => {
+    const ok = await mountResult({ perfect: true, next_level: 2, newly_unlocked: true })
+    expect(ok.find('[data-testid="fireworks"]').exists()).toBe(true)
+    const no = await mountResult({ perfect: false, correct_count: 8, wrong_count: 2, next_level: null })
+    expect(no.find('[data-testid="fireworks"]').exists()).toBe(false)
+  })
+
   it('10/10 ama sonraki seviye yoksa "yeni seviyeler yakında" der', async () => {
     const w = await mountResult({ perfect: true, next_level: null })
     expect(w.text()).toContain('Yeni seviyeler yakında')

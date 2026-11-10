@@ -14,6 +14,7 @@ import ChoiceButton, { type ChoiceState } from '@/components/ChoiceButton.vue'
 import ProgressBar from '@/components/ProgressBar.vue'
 import ShareButtons from '@/components/ShareButtons.vue'
 import TimerRing from '@/components/TimerRing.vue'
+import FireworksBurst from '@/components/FireworksBurst.vue'
 
 const props = defineProps<{ code: string }>()
 const router = useRouter()
@@ -153,17 +154,34 @@ async function join() {
 
 const outcome = computed(() => state.value?.result?.winner ?? null)
 
+// Kazanınca ~5 sn havai fişek ve kısa titreşim (destekleyen cihazlarda)
+const showFireworks = ref(false)
+let fireworksTimer: ReturnType<typeof setTimeout> | null = null
+watch(outcome, (w) => {
+  if (w !== 'me') return
+  showFireworks.value = true
+  try {
+    navigator.vibrate?.([120, 60, 120, 60, 240])
+  } catch {
+    /* titreşim desteklenmiyor */
+  }
+  if (fireworksTimer) clearTimeout(fireworksTimer)
+  fireworksTimer = setTimeout(() => (showFireworks.value = false), 5500)
+})
+
 onMounted(() => {
   ticker = setInterval(() => (now.value = Date.now()), 100)
   if (auth.value) polling.start()
 })
 onBeforeUnmount(() => {
   if (ticker) clearInterval(ticker)
+  if (fireworksTimer) clearTimeout(fireworksTimer)
 })
 </script>
 
 <template>
   <section class="flex flex-1 flex-col gap-4">
+    <FireworksBurst v-if="showFireworks" />
     <p v-if="fatal" class="card space-y-3 p-4 text-center font-bold text-danger" role="alert">
       {{ fatal }}
       <RouterLink to="/yaris" class="mt-3 block text-primary">{{ t('duel.newDuel') }}</RouterLink>
