@@ -256,6 +256,21 @@ describe('DuelRoomView', () => {
     delete (navigator as unknown as Record<string, unknown>).vibrate
   })
 
+  it('hareketi azalt açıksa (animasyonlar kapalı telefon) sabit kutlama gösterir', async () => {
+    const original = window.matchMedia
+    window.matchMedia = ((q: string) => ({ matches: q.includes('reduce'), media: q, addEventListener() {}, removeEventListener() {} })) as unknown as typeof window.matchMedia
+    const { w } = await mountRoom(state({
+      status: 'finished', phase: 'finished', question: null, remaining_ms: null,
+      result: { winner: 'me', me: { correct: 7, points: 900 }, opponent: { correct: 6, points: 800 } },
+    }))
+    const fw = w.find('[data-testid="fireworks"]')
+    expect(fw.exists()).toBe(true)
+    expect(fw.attributes('data-mode')).toBe('static')
+    expect(w.findAll('.firework-particle')).toHaveLength(0)
+    expect(fw.text()).toContain('🎉')
+    window.matchMedia = original
+  })
+
   it.each([
     ['me', 'Kazandın!'],
     ['opponent', 'rakip kazandı'],
